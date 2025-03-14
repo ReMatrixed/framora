@@ -1,8 +1,19 @@
-# For more information about build system see
-# https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/build-system.html
-# The following five lines of boilerplate have to be in your project's
-# CMakeLists in this exact order for cmake to work correctly
-cmake_minimum_required(VERSION 3.5)
+idf_build_get_property(target IDF_TARGET)
 
-include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 project(framora)
+if(${target} STREQUAL "linux")
+    idf_component_register(INCLUDE_DIRS include)
+else()
+    set(srcs "src/framora.c")
+
+    # NOTE: Для будущего использования
+    # if(CONFIG_FEATURE_GRAPHIUM)
+    #     list(APPEND srcs "src/graphium/graphium.c")
+    # endif()
+
+    idf_component_register(
+        SRCS "${srcs}"
+        INCLUDE_DIRS include
+        PRIV_INCLUDE_DIRS private_include
+    )
+endif()
